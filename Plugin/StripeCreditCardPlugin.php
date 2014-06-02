@@ -3,7 +3,7 @@
 namespace KJ\Payment\StripeBundle\Plugin;
 
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\Validator\Validator;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 use JMS\Payment\CoreBundle\Model\PaymentInstructionInterface;
 use JMS\Payment\CoreBundle\Model\FinancialTransactionInterface;
 use JMS\Payment\CoreBundle\Plugin\AbstractPlugin;
@@ -34,7 +34,7 @@ class StripeCreditCardPlugin extends AbstractPlugin implements RecurringPluginIn
     );
 
     /**
-     * @var \Symfony\Component\Validator\Validator
+     * @var \Symfony\Component\Validator\Validator\ValidatorInterface
      */
     protected $validator;
 
@@ -46,10 +46,10 @@ class StripeCreditCardPlugin extends AbstractPlugin implements RecurringPluginIn
     /**
      * Constructor
      *
-     * @param \Symfony\Component\Validator\Validator $validator
+     * @param \Symfony\Component\Validator\Validator\ValidatorInterface $validator
      * @param \KJ\Payment\StripeBundle\Client\Client $client
      */
-    public function __construct(Validator $validator, Client $client)
+    public function __construct(ValidatorInterface $validator, Client $client)
     {
         $this->validator = $validator;
         $this->client = $client;
@@ -128,7 +128,7 @@ class StripeCreditCardPlugin extends AbstractPlugin implements RecurringPluginIn
         }
 
         // validate input data
-        $errors = $this->validator->validateValue($dateToValidate, $constraints);
+        $errors = $this->validator->validate($dateToValidate, $constraints);
 
         // transform validator errors into payment exceptions
         $errorBuilder = new ErrorBuilder();
